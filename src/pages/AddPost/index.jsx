@@ -6,6 +6,7 @@ import SimpleMDE from 'react-simplemde-editor';
 
 import 'easymde/dist/easymde.min.css';
 import styles from './AddPost.module.scss';
+import {Link} from "react-router-dom";
 
 export const AddPost = () => {
     const imageUrl = '';
@@ -62,9 +63,9 @@ export const AddPost = () => {
                 <Button size="large" variant="contained">
                     Опубликовать
                 </Button>
-                <a href="/">
+                <Link to="/">
                     <Button size="large">Отмена</Button>
-                </a>
+                </Link>
             </div>
         </Paper>
     );
