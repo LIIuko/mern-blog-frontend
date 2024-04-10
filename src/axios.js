@@ -1,7 +1,12 @@
 import axios from "axios";
 
-const instanse = axios.create({
+const instance = axios.create({
     baseURL: 'http://localhost:4444',
 })
 
-export default instanse;
+instance.interceptors.request.use((config) => {
+    config.headers.Authorization = window.localStorage.getItem('token');
+    return config;
+})
+
+export default instance;
