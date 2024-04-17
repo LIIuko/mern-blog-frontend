@@ -12,6 +12,7 @@ import {fetchPosts, fetchTags} from "../redux/slices/posts.js";
 export const Home = () => {
 
     const dispatch = useDispatch();
+    const {user} = useSelector(state => state.user);
     const {posts, tags} = useSelector(state => state.posts);
     useEffect(() => {
         dispatch(fetchPosts());
@@ -37,13 +38,13 @@ export const Home = () => {
                                     key={index}
                                     id={obj._id}
                                     title={obj.title}
-                                    imageUrl={obj.imageUrl}
+                                    imageUrl={obj.imageUrl ? `http://localhost:4444${obj.imageUrl}` : ''}
                                     user={obj.user}
                                     createdAt={obj.createdAt}
                                     viewsCount={obj.viewsCount}
                                     commentsCount={3}
                                     tags={obj.tags}
-                                    isEditable
+                                    isEditable={user?._id === obj.user._id}
                                 />
                             ))}
                 </Grid>
