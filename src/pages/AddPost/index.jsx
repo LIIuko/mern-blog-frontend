@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
@@ -6,7 +6,7 @@ import SimpleMDE from 'react-simplemde-editor';
 
 import 'easymde/dist/easymde.min.css';
 import styles from './AddPost.module.scss';
-import {Link, Navigate, useNavigate} from "react-router-dom";
+import {Link, Navigate, useNavigate, useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {selectIsAuth} from "../../redux/slices/auth.js";
 import {set} from "react-hook-form";
@@ -19,15 +19,31 @@ export const AddPost = () => {
         return <Navigate to={'/'}/>
     }
 
+    const {id} = useParams();
+    const isEditing = Boolean(id);
+
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false);
-    const [text, setText] = useState('');
     const [title, setTitle] = useState('');
+    const [text, setText] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [tags, setTags] = useState([]);
 
     const inputFileRef = useRef();
+
+    useEffect(() => {
+        if (id) {
+            axios.get(`posts/${id}`).then(({data}) => {
+                    setTitle(data.title);
+                    setText(data.text);
+                    setImageUrl(data.imageUrl);
+                    setTags(data.tags);
+                }
+            )
+            ;
+        }
+    }, [])
 
 
     const handleChangeFile = async (event) => {
@@ -49,7 +65,7 @@ export const AddPost = () => {
     };
 
     const onSubmit = async () => {
-        try{
+        try {
             setLoading(true);
 
             const fields = {
@@ -59,9 +75,12 @@ export const AddPost = () => {
                 imageUrl,
             }
 
-            const {data} = await axios.post('/posts', fields);
+            const {data} = isEditing
+                ? await axios.patch(`/posts/${id}`, fields)
+                : await axios.post('/posts', fields);
 
-            navigate(`/posts/${data._id}`);
+            setLoading(false);
+            navigate(`/posts/${isEditing ? id : data._id}`);
         } catch (e) {
             console.warn(e);
             alert('Ошибка при создании статьи');
@@ -123,8 +142,8 @@ export const AddPost = () => {
             <SimpleMDE className={styles.editor} value={text} onChange={onChange} options={options}/>
             <div className={styles.buttons}>
                 <Button onClick={onSubmit} size="large" variant="contained">
-                    Опубликовать
-                </Button>
+                    {isEditing ? 'Сохранить' : 'Опубликовать'}
+                < /Button>
                 <Link to="/">
                     <Button size="large">Отмена</Button>
                 </Link>

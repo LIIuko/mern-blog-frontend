@@ -14,6 +14,7 @@ export const Home = () => {
     const dispatch = useDispatch();
     const {user} = useSelector(state => state.user);
     const {posts, tags} = useSelector(state => state.posts);
+
     useEffect(() => {
         dispatch(fetchPosts());
         dispatch(fetchTags());
