@@ -27,6 +27,7 @@ const App = () => {
                     {/*        )*/}
                     {/*    )}*/}
                     <Route path={'/'} element={<Home/>}/>
+                    <Route path={'/tags/:tag'} element={<Home/>}/>
                     <Route path={'/posts/:id'} element={<FullPost/>}/>
                     <Route path={'/posts/:id/edit'} element={<AddPost/>}/>
                     <Route path={'/add-post'} element={<AddPost/>}/>

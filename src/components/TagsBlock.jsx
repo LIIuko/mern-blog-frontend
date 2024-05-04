@@ -9,16 +9,35 @@ import ListItemText from "@mui/material/ListItemText";
 import Skeleton from "@mui/material/Skeleton";
 
 import { SideBlock } from "./SideBlock";
+import {Link} from "react-router-dom";
 
 export const TagsBlock = ({ items, isLoading = true }) => {
     return (
         <SideBlock title="Тэги">
             <List>
+                <Link
+                    key={name}
+                    style={{ textDecoration: "none", color: "black" }}
+                    to={`/`}
+                >
+                    <ListItem disablePadding>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <TagIcon />
+                            </ListItemIcon>
+                            {isLoading ? (
+                                <Skeleton width={10} />
+                            ) : (
+                                <ListItemText primary={"Все"} />
+                            )}
+                        </ListItemButton>
+                    </ListItem>
+                </Link>
                 {(isLoading ? [...Array(5)] : items).map((name) => (
-                    <a
+                    <Link
                         key={name}
                         style={{ textDecoration: "none", color: "black" }}
-                        href={`/tags/${name}`}
+                        to={`/tags/${name}`}
                     >
                         <ListItem disablePadding>
                             <ListItemButton>
@@ -26,13 +45,13 @@ export const TagsBlock = ({ items, isLoading = true }) => {
                                     <TagIcon />
                                 </ListItemIcon>
                                 {isLoading ? (
-                                    <Skeleton width={100} />
+                                    <Skeleton width={10} />
                                 ) : (
                                     <ListItemText primary={name} />
                                 )}
                             </ListItemButton>
                         </ListItem>
-                    </a>
+                    </Link>
                 ))}
             </List>
         </SideBlock>
