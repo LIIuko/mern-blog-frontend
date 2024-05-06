@@ -6,9 +6,12 @@ import {CommentsBlock} from "../components/CommentsBlock";
 import {useParams} from "react-router-dom";
 import axios from "../axios.js";
 import Markdown from "react-markdown";
+import {useSelector} from "react-redux";
+import {selectIsAuth} from "../redux/slices/auth.js";
 
 export const FullPost = () => {
 
+    const isAuth = useSelector(selectIsAuth);
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(true);
     const {id} = useParams();
@@ -37,38 +40,21 @@ export const FullPost = () => {
     return (
         <>
             <Post
-                id={data._id}
-                title={data.title}
+                {...data}
                 imageUrl={data.imageUrl ? `http://localhost:4444${data.imageUrl}` : ''}
-                user={data.user}
-                createdAt={data.createdAt}
-                viewsCount={data.viewsCount}
-                commentsCount={data.comments.length}
-                tags={data.tags}
                 isFullPost
             >
                 <Markdown>{data.text}</Markdown>
             </Post>
             <CommentsBlock items={data.comments}
-                // items={[
-                //     {
-                //         user: {
-                //             fullName: "Вася Пупкин",
-                //             avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
-                //         },
-                //         text: "Это тестовый комментарий 555555",
-                //     },
-                //     {
-                //         user: {
-                //             fullName: "Иван Иванов",
-                //             avatarUrl: "https://mui.com/static/images/avatar/2.jpg",
-                //         },
-                //         text: "When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top",
-                //     },
-                // ]}
-                isLoading={false}
+                           isLoading={false}
             >
-                <Index addComment={addComment}/>
+                {isAuth ?
+                    <Index addComment={addComment}/>
+                    :
+                    <></>
+                }
+
             </CommentsBlock>
         </>
     );

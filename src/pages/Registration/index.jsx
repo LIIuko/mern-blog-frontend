@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
@@ -10,11 +10,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {useForm} from "react-hook-form";
 import {fetchRegister, selectIsAuth} from "../../redux/slices/auth.js";
 import {Navigate} from "react-router-dom";
+import axios from "../../axios.js";
 
 export const Registration = () => {
 
     const isAuth = useSelector(selectIsAuth)
     const dispatch = useDispatch();
+    const inputFileRef = useRef();
+    const [imageUrl, setImageUrl] = useState('');
 
     const {
         register,
@@ -30,7 +33,11 @@ export const Registration = () => {
     });
 
     const onSubmit = async (values) => {
-        const data = await dispatch(fetchRegister(values))
+        const completeValues = {
+            ...values,
+            avatarUrl: imageUrl  // Убедитесь, что сервер обрабатывает этот параметр корректно
+        };
+        const data = await dispatch(fetchRegister(completeValues))
         if (!data.payload) {
             return alert('Не удалось зарегистрироваться')
         }
@@ -39,19 +46,49 @@ export const Registration = () => {
         }
     }
 
+    const handleChangeFile = async (event) => {
+        try {
+            const file = event.target.files[0];
+            if (!file) {
+                alert('Файл не выбран!');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setImageUrl(e.target.result);  // Установка превью изображения
+            };
+            reader.readAsDataURL(file);
+
+            const formData = new FormData();
+            formData.append('image', file);
+            const {data} = await axios.post('/upload', formData);
+            setImageUrl(data.url);
+        } catch (e) {
+            console.warn(e)
+            alert('Ошибка при загрузке файла');
+        }
+    };
+
     if (isAuth) {
         return <Navigate to={'/'}/>
     }
+
 
     return (
         <Paper classes={{root: styles.root}}>
             <Typography classes={{root: styles.title}} variant="h5">
                 Создание аккаунта
             </Typography>
-            <div className={styles.avatar}>
-                <Avatar sx={{width: 100, height: 100}}/>
-            </div>
             <form onSubmit={handleSubmit(onSubmit)}>
+                <input
+                    ref={inputFileRef}
+                    type="file"
+                    onChange={handleChangeFile}
+                    hidden
+                />
+                <div onClick={() => inputFileRef.current.click()} className={styles.avatar}>
+                    <Avatar sx={{width: 100, height: 100}} src={`http://localhost:4444${imageUrl}`}/>
+                </div>
                 <TextField
                     className={styles.field}
                     label="Полное имя"

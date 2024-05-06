@@ -15,13 +15,13 @@ import {fetchRemovePost} from "../../redux/slices/posts.js";
 import {logout} from "../../redux/slices/auth.js";
 
 export const Post = ({
-                         id,
+                         _id,
                          title,
                          createdAt,
                          imageUrl,
                          user,
                          viewsCount,
-                         commentsCount,
+                         comments,
                          tags,
                          children,
                          isFullPost,
@@ -36,7 +36,7 @@ export const Post = ({
 
     const onClickRemove = () => {
         if (window.confirm('Вы действительно хотите удалитьь статью?')){
-            dispatch(fetchRemovePost(id));
+            dispatch(fetchRemovePost(_id));
         }
 
     };
@@ -45,7 +45,7 @@ export const Post = ({
         <div className={clsx(styles.root, { [styles.rootFull]: isFullPost })}>
             {isEditable && (
                 <div className={styles.editButtons}>
-                    <Link to={`/posts/${id}/edit`}>
+                    <Link to={`/posts/${_id}/edit`}>
                         <IconButton color="primary">
                             <EditIcon />
                         </IconButton>
@@ -63,10 +63,14 @@ export const Post = ({
                 />
             )}
             <div className={styles.wrapper}>
-                <UserInfo {...user} additionalText={createdAt} />
+                <UserInfo
+                    {...user}
+                    avatarUrl={user.avatarUrl ? `http://localhost:4444${user.avatarUrl}` : 'noavatar.png'}
+                    additionalText={createdAt} 
+                />
                 <div className={styles.indention}>
                     <h2 className={clsx(styles.title, { [styles.titleFull]: isFullPost })}>
-                        {isFullPost ? title : <Link to={`/posts/${id}`}>{title}</Link>}
+                        {isFullPost ? title : <Link to={`/posts/${_id}`}>{title}</Link>}
                     </h2>
                     <ul className={styles.tags}>
                         {tags.map((name) => (
@@ -83,7 +87,7 @@ export const Post = ({
                         </li>
                         <li>
                             <CommentIcon />
-                            <span>{commentsCount}</span>
+                            <span>{comments.length}</span>
                         </li>
                     </ul>
                 </div>

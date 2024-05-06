@@ -1,26 +1,18 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Grid from '@mui/material/Grid';
-
-import {Post} from '../components/Post';
-import {TagsBlock} from '../components/TagsBlock';
-import {CommentsBlock} from '../components/CommentsBlock';
-import {useDispatch, useSelector} from "react-redux";
-import {fetchPosts, fetchTags} from "../redux/slices/posts.js";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Grid from "@mui/material/Grid";
+import {Post} from "../../components/index.js";
+import {useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
+import styles from './Profile.module.scss';
+import axios from "../../axios.js";
 
-export const Home = () => {
-
-    const dispatch = useDispatch();
+const Profile = () => {
+    const {posts} = useSelector(state => state.posts);
+    const {id} = useParams();
     const {user} = useSelector(state => state.user);
-    const {posts, tags} = useSelector(state => state.posts);
-    const {tag} = useParams();
-
-    useEffect(() => {
-        dispatch(fetchPosts());
-        dispatch(fetchTags());
-    }, []);
+    const [findUser, setFindUser] = useState({});
 
     const [value, setValue] = useState(0);
 
@@ -28,9 +20,25 @@ export const Home = () => {
         setValue(newValue);
     };
 
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const { data } = await axios.get(`/auth/user/${id}`);
+                if (data) {
+                    setFindUser(data);  // Предполагаем, что ответ содержит нужные данные о пользователе
+                } else {
+                    console.log("Пользователь не найден.");
+                }
+            } catch (error) {
+                console.error('There was an error!', error);
+            }
+        };
+        fetchUser();
+    }, [id]);
+
     const getSortedPosts = useMemo(() => {
         if (posts.loading) {
-            return [...Array(5)];
+            return [...Array(5).fill({ isLoading: true })];
         } else {
             let sortedPosts = [...posts.items];
             if (value === 0) {
@@ -38,18 +46,23 @@ export const Home = () => {
             } else if (value === 1) {
                 sortedPosts.sort((a, b) => b.viewsCount - a.viewsCount);
             }
-            return sortedPosts.filter(value => !tag || value.tags.includes(tag));
+            return sortedPosts.filter(post => post.user._id === id);
         }
-    },[posts, value, tag]);
+    }, [posts, value, id]);
+
 
     return (
         <>
+            <div className={styles.root}>
+                <img className={styles.avatar} src={findUser.avatarUrl ? `http://localhost:4444${findUser.avatarUrl}` : '/noavatar.png'} alt={findUser.fullName}/>
+                <h2 className={styles.userName}>{findUser.fullName}</h2>
+            </div>
             <Tabs style={{marginBottom: 15}} value={value} onChange={handleChange} aria-label="basic tabs example">
                 <Tab label="Новые"/>
                 <Tab label="Популярные"/>
             </Tabs>
             <Grid container spacing={4}>
-                <Grid xs={8} item>
+                <Grid xs={12} item>
                     {posts.loading ? (
                         Array.from({ length: 5 }, (_, index) => <Post key={index} isLoading={true} />)
                     ) : (
@@ -63,10 +76,9 @@ export const Home = () => {
                         ))
                     )}
                 </Grid>
-                <Grid xs={4} item>
-                    <TagsBlock items={tags.items} isLoading={tags.loading}/>
-                </Grid>
             </Grid>
         </>
     );
 };
+
+export default Profile;

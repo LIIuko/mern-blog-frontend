@@ -8,7 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {logout, selectIsAuth} from "../../redux/slices/auth.js";
 
 const Header = () => {
-
+    const {user} = useSelector(state => state.user);
     const isAuth = useSelector(selectIsAuth);
     const dispatch = useDispatch();
 
@@ -29,6 +29,9 @@ const Header = () => {
                     <div className={styles.buttons}>
                         {isAuth ? (
                             <>
+                                <Link to={`/${user._id}`}>
+                                    <img className={styles.avatar} src={user.avatarUrl ? `http://localhost:4444${user.avatarUrl}` : '/noavatar.png'} alt={user.fullName}/>
+                                </Link>
                                 <Link to="/add-post">
                                     <Button variant="contained">Написать статью</Button>
                                 </Link>
