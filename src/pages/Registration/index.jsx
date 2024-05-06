@@ -91,7 +91,7 @@ export const Registration = () => {
                 <div onClick={() => inputFileRef.current.click()} className={styles.avatar}>
                     {
                         imageUrl ?
-                            <img className={styles.img} src={`http://localhost:4444/uploads/${imageUrl}`}/>
+                            <img className={styles.img} src={`https://traaaaaaader-blog-api.onrender.com/${imageUrl}`}/>
                             :
                             <Avatar sx={{width: 100, height: 100}}/>
                     }

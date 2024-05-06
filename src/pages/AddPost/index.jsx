@@ -116,7 +116,7 @@ export const AddPost = () => {
                     <Button variant="contained" color="error" onClick={onClickRemoveImage}>
                         Удалить
                     </Button>
-                    <img className={styles.image} src={`http://localhost:4444/uploads/${imageUrl}`} alt="Uploaded"/>
+                    <img className={styles.image} src={`https://traaaaaaader-blog-api.onrender.com/${imageUrl}`} alt="Uploaded"/>
                 </>
 
             )}
