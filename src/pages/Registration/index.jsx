@@ -62,7 +62,7 @@ export const Registration = () => {
             const formData = new FormData();
             formData.append('image', file);
             const {data} = await axios.post('/upload', formData);
-            setImageUrl(data.url);
+            setImageUrl(data.id);
         } catch (e) {
             console.warn(e)
             alert('Ошибка при загрузке файла');
@@ -72,6 +72,8 @@ export const Registration = () => {
     if (isAuth) {
         return <Navigate to={'/'}/>
     }
+
+    console.log(`http:localhost:4444/uploads/${imageUrl}`)
 
 
     return (
@@ -87,7 +89,12 @@ export const Registration = () => {
                     hidden
                 />
                 <div onClick={() => inputFileRef.current.click()} className={styles.avatar}>
-                    <Avatar sx={{width: 100, height: 100}} src={`http://localhost:4444${imageUrl}`}/>
+                    {
+                        imageUrl ?
+                            <img className={styles.img} src={`http://localhost:4444/uploads/${imageUrl}`}/>
+                            :
+                            <Avatar sx={{width: 100, height: 100}}/>
+                    }
                 </div>
                 <TextField
                     className={styles.field}

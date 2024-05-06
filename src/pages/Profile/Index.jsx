@@ -54,7 +54,7 @@ const Profile = () => {
     return (
         <>
             <div className={styles.root}>
-                <img className={styles.avatar} src={findUser.avatarUrl ? `http://localhost:4444${findUser.avatarUrl}` : '/noavatar.png'} alt={findUser.fullName}/>
+                <img className={styles.avatar} src={findUser.avatarUrl ? findUser.avatarUrl : '/noavatar.png'} alt={findUser.fullName}/>
                 <h2 className={styles.userName}>{findUser.fullName}</h2>
             </div>
             <Tabs style={{marginBottom: 15}} value={value} onChange={handleChange} aria-label="basic tabs example">
@@ -70,7 +70,7 @@ const Profile = () => {
                             <Post
                                 key={obj._id}
                                 {...obj}
-                                imageUrl={obj.imageUrl ? `http://localhost:4444${obj.imageUrl}` : ''}
+                                imageUrl={obj.imageUrl ? `http://localhost:4444/uploads/${obj.imageUrl}` : ''}
                                 isEditable={user?._id === obj.user._id}
                             />
                         ))

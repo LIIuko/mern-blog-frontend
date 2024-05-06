@@ -41,7 +41,7 @@ export const FullPost = () => {
         <>
             <Post
                 {...data}
-                imageUrl={data.imageUrl ? `http://localhost:4444${data.imageUrl}` : ''}
+                imageUrl={data.imageUrl ? data.imageUrl : ''}
                 isFullPost
             >
                 <Markdown>{data.text}</Markdown>

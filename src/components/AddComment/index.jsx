@@ -39,7 +39,7 @@ export const Index = ({ addComment }) => {
             <div className={styles.root}>
                 <Avatar
                     classes={{ root: styles.avatar }}
-                    src={user?.avatarUrl || '/noavatar.png'}
+                    src={user.avatarUrl ? user.avatarUrl : '/noavatar.png'}
                 />
                 <div className={styles.form}>
                     <TextField

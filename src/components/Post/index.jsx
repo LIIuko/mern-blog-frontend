@@ -65,7 +65,7 @@ export const Post = ({
             <div className={styles.wrapper}>
                 <UserInfo
                     {...user}
-                    avatarUrl={user.avatarUrl ? `http://localhost:4444${user.avatarUrl}` : 'noavatar.png'}
+                    avatarUrl={user.avatarUrl ? user.avatarUrl : 'noavatar.png'}
                     additionalText={createdAt} 
                 />
                 <div className={styles.indention}>

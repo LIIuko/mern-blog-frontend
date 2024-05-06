@@ -30,7 +30,7 @@ const Header = () => {
                         {isAuth ? (
                             <>
                                 <Link to={`/${user._id}`}>
-                                    <img className={styles.avatar} src={user.avatarUrl ? `http://localhost:4444${user.avatarUrl}` : '/noavatar.png'} alt={user.fullName}/>
+                                    <img className={styles.avatar} src={user.avatarUrl ? user.avatarUrl : '/noavatar.png'} alt={user.fullName}/>
                                 </Link>
                                 <Link to="/add-post">
                                     <Button variant="contained">Написать статью</Button>
