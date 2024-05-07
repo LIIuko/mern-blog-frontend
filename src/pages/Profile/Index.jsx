@@ -70,7 +70,7 @@ const Profile = () => {
                             <Post
                                 key={obj._id}
                                 {...obj}
-                                imageUrl={obj.imageUrl ? `http://localhost:4444/uploads/${obj.imageUrl}` : ''}
+                                imageUrl={obj.imageUrl ? obj.imageUrl : ''}
                                 isEditable={user?._id === obj.user._id}
                             />
                         ))

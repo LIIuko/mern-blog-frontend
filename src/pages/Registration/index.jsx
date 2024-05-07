@@ -62,7 +62,7 @@ export const Registration = () => {
             const formData = new FormData();
             formData.append('image', file);
             const {data} = await axios.post('/upload', formData);
-            setImageUrl(data.id);
+            setImageUrl(`https://traaaaaaader-blog-api.onrender.com/${data.id}`);
         } catch (e) {
             console.warn(e)
             alert('Ошибка при загрузке файла');
@@ -91,7 +91,7 @@ export const Registration = () => {
                 <div onClick={() => inputFileRef.current.click()} className={styles.avatar}>
                     {
                         imageUrl ?
-                            <img className={styles.img} src={`https://traaaaaaader-blog-api.onrender.com/${imageUrl}`}/>
+                            <img className={styles.img} src={imageUrl}/>
                             :
                             <Avatar sx={{width: 100, height: 100}}/>
                     }
