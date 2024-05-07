@@ -52,7 +52,7 @@ export const AddPost = () => {
             const file = event.target.files[0];
             formData.append('image', file);
             const {data} = await axios.post('/upload', formData);
-            setImageUrl(`https://traaaaaaader-blog-api.onrender.com/${data.id}`);
+            setImageUrl(`https://traaaaaaader-blog-api.onrender.com/uploads/${data.id}`);
         } catch (e) {
             console.warn(e)
             alert('Ошибка при загрузке файла');
